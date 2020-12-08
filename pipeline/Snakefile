@@ -1,0 +1,23 @@
+
+rule calc_prevalence:
+	input:
+		"../Input/{file}/reference.fasta",
+		"../Midprocess/{file}/quasispecies.fasta"
+	output:
+		"../Midprocess/{file}/quasispecies_nt_prevalence.csv"
+	conda:
+		"../env.yaml"
+	script:
+		"calc_prevalence.py"
+
+rule create_primers:
+	input:
+		"../Input/{file}/reference.fasta",
+		"../Midprocess/{file}/quasispecies_nt_prevalence.csv",
+		"../params.json"
+	output:
+		"../Output/{file}/primer_set.csv"
+	conda:
+		"../env.yaml"
+	script:
+		"create_primers.py"
