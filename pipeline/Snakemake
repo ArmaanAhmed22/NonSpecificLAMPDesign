@@ -1,9 +1,0 @@
-rule create_primers:
-	input:
-		"../Input/{file}/reference.fasta",
-		"../Input/{file}/quasispecies.fasta",
-		"../params.json"
-	output:
-		"../Output/{file}/primer_set.json"
-	script:
-		"create_primers.py"
