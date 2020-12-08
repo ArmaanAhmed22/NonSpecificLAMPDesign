@@ -1,0 +1,10 @@
+rule sequence_filter:
+	input:
+		"../Input/{file}/reference.fasta",
+		"../Input/{file}/quasispecies.fasta"
+	output:
+		"../Midprocess/{file}/quasispecies.fasta"
+	conda:
+		"../env.yaml"
+	script:
+		"sequence_filter.py"
