@@ -172,3 +172,12 @@ dmypy.json
 .prof
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,python
+
+#File created by snakemake
+.snakemake
+
+#Files/Directories created from pipeline
+Midprocess
+Output
+Input
+!Input/.gitkeep

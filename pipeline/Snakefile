@@ -1,10 +1,9 @@
-
 rule calc_prevalence:
 	input:
 		"../Input/{file}/reference.fasta",
-		"../Midprocess/{file}/quasispecies.fasta"
+		"../Input/{file}/quasispecies.fasta"
 	output:
-		"../Midprocess/{file}/quasispecies_nt_prevalence.csv"
+		"../Output/{file}/quasispecies_nt_prevalence.csv"
 	conda:
 		"../env.yaml"
 	script:
@@ -13,11 +12,75 @@ rule calc_prevalence:
 rule create_primers:
 	input:
 		"../Input/{file}/reference.fasta",
-		"../Midprocess/{file}/quasispecies_nt_prevalence.csv",
-		"../params.json"
+		"../Input/{file}/quasispecies.fasta",
+		"../Output/{file}/quasispecies_nt_prevalence.csv",
+		"../params.json",
+		"../assay_params.json",
+		"../params_thermo.json"
 	output:
-		"../Output/{file}/primer_set.csv"
+		"../Output/{file}/primers.csv"
+	threads: 10
 	conda:
 		"../env.yaml"
 	script:
 		"create_primers.py"
+
+rule score_primers:
+	input:
+		"../Output/{file}/primers.csv",
+		"../params_thermo.json"
+	output:
+		"../Output/{file}/primers_scored.csv"
+	conda:
+		"../env.yaml"
+	script:
+		"score_primers.py"
+
+rule create_primer_sets:
+	input:
+		"../Output/{file}/primers_scored.csv",
+		"../params.json"
+	output:
+		"../Output/{file}/primer_sets.json"
+	conda:
+		"../env.yaml"
+	script:
+		"create_primer_sets.py"
+
+rule mutate_primer_set:
+	input:
+		"../Output/{file}/primer_sets.json",
+		"../Output/{file}/quasispecies_nt_prevalence.csv",
+		"../params.json",
+		"../ambiguous_to_nt.json"
+	output:
+		"../Output/{file}/degenerate_primer_sets.csv"
+	conda:
+		"../env.yaml"
+	script:
+		"mutate.py"
+
+rule target_sequences:
+	input:
+		"../Output/{file}/degenerate_primer_sets.csv",
+		"../Output/{file}/quasispecies.fasta",
+		"../params.json",
+		"../ambiguous_to_nt.json"
+	output:
+		"../Output/{file}/primer_sets_coverage.csv",
+		"../Output/{file}/untargetable.fasta"	
+	conda:
+		"../env.yaml"
+	script:
+		"target_sequences.py"
+rule reverse_sequences:
+	input:
+		"../Input/{file}/reference.fasta",
+		"../Input/{file}/quasispecies.fasta"
+	output:
+		"../Input/{file}_rev/reference.fasta",
+		"../Input/{file}_rev/quasispecies.fasta"
+	conda:
+		"../env.yaml"
+	script:
+		"reverse_sequences.py"

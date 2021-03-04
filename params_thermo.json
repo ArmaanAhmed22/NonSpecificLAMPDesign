@@ -1,0 +1,69 @@
+{
+	"TM" : {
+		"F3": {
+			"minimum" : 59,
+			"ideal" : 60,
+			"maximum" : 61
+		},
+		"F2":{
+			"minimum" : 59,
+			"ideal" : 60,
+			"maximum" : 61
+		},
+		"F1c":{
+			"minimum" : 64,
+			"ideal" : 65,
+			"maximum" : 66
+		},
+		"B1c":{
+			"minimum" : 64,
+			"ideal" : 65,
+			"maximum" : 65
+		},
+		"B2":{
+			"minimum" : 59,
+			"ideal" : 60,
+			"maximum" : 61
+		},
+		"B3": {
+			"minimum" : 59,
+			"ideal" : 60,
+			"maximum" : 61
+		}
+	},
+	"END_STABILITY":{
+		"maximum":-4
+	},
+	"GC" : {
+		"F3": {
+			"minimum" : 0.4,
+			"ideal" : 0.55,
+			"maximum" : 0.65
+		},
+		"F2":{
+			"minimum" : 0.4,
+			"ideal" : 0.55,
+			"maximum" : 0.65
+		},
+		"F1c":{
+			"minimum" : 0.4,
+			"ideal" : 0.55,
+			"maximum" : 0.65
+		},
+		"B1c":{
+			"minimum" : 0.4,
+			"ideal" : 0.55,
+			"maximum" : 0.65
+		},
+		"B2":{
+			"minimum" : 0.4,
+			"ideal" : 0.55,
+			"maximum" : 0.65
+		},
+		"B3": {
+			"minimum" : 0.4,
+			"ideal" : 0.55,
+			"maximum" : 0.65
+		}
+	}
+}
