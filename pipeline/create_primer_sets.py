@@ -42,6 +42,8 @@ for f3_data in tqdm(df_F3.itertuples(),total=df_F3.shape[0]):
 			for b1c_primer,b1c_data in enumerate(df_B1c.itertuples()):
 				if f3_data.score + f2_data.score + f1c_data.score < b1c_data.max_before_score:
 					continue
+				if f1c_data.pos+f1c_data.length >= b1c_data.pos:
+					continue
 				df_B1c.iat[b1c_primer,-1] = f3_data.score + f2_data.score + f1c_data.score
 				for b2_primer,b2_data in enumerate(df_B2.itertuples()):
 					#for B1c

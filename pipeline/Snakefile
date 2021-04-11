@@ -1,3 +1,4 @@
+
 rule calc_prevalence:
 	input:
 		"../Input/{file}/reference.fasta",
@@ -9,6 +10,10 @@ rule calc_prevalence:
 	script:
 		"calc_prevalence.py"
 
+
+
+
+
 rule create_primers:
 	input:
 		"../Input/{file}/reference.fasta",
@@ -19,7 +24,6 @@ rule create_primers:
 		"../params_thermo.json"
 	output:
 		"../Output/{file}/primers.csv"
-	threads: 10
 	conda:
 		"../env.yaml"
 	script:
@@ -28,7 +32,8 @@ rule create_primers:
 rule score_primers:
 	input:
 		"../Output/{file}/primers.csv",
-		"../params_thermo.json"
+		"../params_thermo.json",
+		"../params.json"
 	output:
 		"../Output/{file}/primers_scored.csv"
 	conda:
@@ -63,16 +68,47 @@ rule mutate_primer_set:
 rule target_sequences:
 	input:
 		"../Output/{file}/degenerate_primer_sets.csv",
-		"../Output/{file}/quasispecies.fasta",
+		"../Input/{file}/quasispecies.fasta",
 		"../params.json",
-		"../ambiguous_to_nt.json"
+		"../ambiguous_to_nt.json",
+		"../assay_params.json",
+		"../params_thermo.json"
 	output:
-		"../Output/{file}/primer_sets_coverage.csv",
+		"../Output/{file}/primer_sets_coverage.txt",
 		"../Output/{file}/untargetable.fasta"	
 	conda:
 		"../env.yaml"
 	script:
 		"target_sequences.py"
+
+rule create_ready_sets:
+	input:
+		"../Output/{file}/degenerate_primer_sets.csv"
+	output:
+		"../Output/{file}/ready_primer_sets.json"
+	conda:
+		"../env.yaml"
+	script:
+		"create_ready_sets.py"
+
+
+rule draw_primer_sets:
+	input:
+		"../Output/{file}/degenerate_primer_sets.csv",
+		"../Input/{file}/reference.fasta"
+	output:
+		"../Output/{file}/draw.pdf"
+	conda:
+		"../env.yaml"
+	script:
+		"draw_set.py"
+
+
+
+
+
+
+
 rule reverse_sequences:
 	input:
 		"../Input/{file}/reference.fasta",

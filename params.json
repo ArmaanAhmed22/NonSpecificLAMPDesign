@@ -71,8 +71,9 @@
 			"B2":1,
 			"B3":1
 		},
-		"tolerance":3
+		"tolerance":2
 	},
 	"top":1,
-	"degenerates":3
+	"degenerates":2,
+	"score_quantile":0.9
 }

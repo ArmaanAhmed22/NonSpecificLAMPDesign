@@ -25,10 +25,16 @@ def score_primers():
 
 	final_score = scored_entropy + scored_entropy_end + scored_tm + scored_gc + scored_end
 	scored_primers["score"] = final_score
-	return scored_primers
+	true_output = pd.DataFrame(columns=scored_primers.columns)
+	for region in ["F3","F2","F1c","B1c","B2","B3"]:
+		region_scored_primers = scored_primers[scored_primers["region"] == region]
+		score_thresh = region_scored_primers.quantile(params["score_quantile"])["score"]
+		true_output = true_output.append(region_scored_primers[region_scored_primers["score"] >= score_thresh])
+	return true_output
 
 
 primers = pd.read_csv(snakemake.input[0])
 thermo_params = json.load(open(snakemake.input[1],"r"))
+params = json.load(open(snakemake.input[2],"r"))
 output = score_primers()
 output.to_csv(snakemake.output[0],index=False)
