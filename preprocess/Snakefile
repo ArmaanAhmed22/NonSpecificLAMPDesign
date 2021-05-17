@@ -1,9 +1,9 @@
 rule sequence_filter:
 	input:
-		"../Input/{file}/reference.fasta",
-		"../Input/{file}/quasispecies.fasta"
+		"preinputs/{file}/reference.fasta",
+		"preinputs/{file}/quasispecies.fasta"
 	output:
-		"../Midprocess/{file}/quasispecies.fasta"
+		"../Input/{file}/quasispecies.fasta"
 	conda:
 		"../env.yaml"
 	script:
