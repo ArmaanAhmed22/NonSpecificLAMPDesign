@@ -18,7 +18,7 @@
 		"B1c":{
 			"minimum" : 64,
 			"ideal" : 65,
-			"maximum" : 65
+			"maximum" : 66
 		},
 		"B2":{
 			"minimum" : 59,
@@ -29,6 +29,16 @@
 			"minimum" : 59,
 			"ideal" : 60,
 			"maximum" : 61
+		},
+		"LoopF": {
+			"minimum":64,
+			"ideal":65,
+			"maximum":66
+		},
+		"LoopB": {
+			"minimum":64,
+			"ideal":65,
+			"maximum":66
 		}
 	},
 	"END_STABILITY":{
@@ -61,6 +71,16 @@
 			"maximum" : 0.65
 		},
 		"B3": {
+			"minimum" : 0.4,
+			"ideal" : 0.55,
+			"maximum" : 0.65
+		},
+		"LoopF": {
+			"minimum" : 0.4,
+			"ideal" : 0.55,
+			"maximum" : 0.65
+		},
+		"LoopB": {
 			"minimum" : 0.4,
 			"ideal" : 0.55,
 			"maximum" : 0.65
