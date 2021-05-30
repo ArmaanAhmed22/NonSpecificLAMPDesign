@@ -30,6 +30,16 @@
 		{
 			"minimum":15,
 			"maximum":20
+		},
+		"LoopF":
+		{
+			"minimum":15,
+			"maximum":30
+		},
+		"LoopB":
+		{
+			"minimum":15,
+			"maximum":30
 		}
 	},
 	"spacing":
@@ -69,7 +79,9 @@
 			"F1c":-1,
 			"B1c":-1,
 			"B2":1,
-			"B3":1
+			"B3":1,
+			"LoopF":1,
+			"LoopB":1
 		},
 		"tolerance":2
 	},

@@ -21,7 +21,7 @@ def score_primers():
 	scored_gc = (np.concatenate(tuple(scored_gc_regions)) + 1) / (np.concatenate(tuple(scored_gc_regions)) + 1).max()
 	scored_end = scored_primers.end.apply(lambda elem : 1 if elem <= thermo_params["END_STABILITY"]["maximum"] else 0).to_numpy()
 	scored_entropy = scored_primers.entropy.apply(lambda elem : 1-(elem / scored_primers.entropy.max())).to_numpy()
-	scored_entropy_end = scored_primers.entropy_end.apply(lambda elem : 1-(elem / scored_primers.entropy.max())).to_numpy()
+	scored_entropy_end = scored_primers.entropy_end.apply(lambda elem : 1-(elem / scored_primers.entropy_end.max())).to_numpy()
 
 	final_score = scored_entropy + scored_entropy_end + scored_tm + scored_gc + scored_end
 	scored_primers["score"] = final_score

@@ -11,7 +11,7 @@ rule calc_prevalence:
 		"calc_prevalence.py"
 
 
-
+"""
 
 
 rule create_primers:
@@ -102,8 +102,24 @@ rule draw_primer_sets:
 		"../env.yaml"
 	script:
 		"draw_set.py"
+"""
 
-
+rule lazy_loop_primers:
+	input:
+		"../Output/{file}/degenerate_primer_sets.csv",
+		"../Input/{file}/reference.fasta",
+		"../Input/{file}/quasispecies.fasta",
+		"../Output/{file}/quasispecies_nt_prevalence.csv",
+		"../params.json",
+		"../assay_params.json",
+		"../params_thermo.json",
+		"../ambiguous_to_nt.json"
+	output:
+		"../Output/{file}/primers_lazy_loops.csv"
+	conda:
+		"../env.yaml"
+	script:
+		"lazy_loop_primers.py"
 
 
 

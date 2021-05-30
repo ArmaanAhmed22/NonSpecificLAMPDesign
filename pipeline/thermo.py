@@ -11,18 +11,20 @@ def calc_median_end_stability(region,partial_sequences,primer3_params):
 	#Maybe adjust?
 	end_stabilities = []
 	for partial_seq,number in partial_sequences.items():
-		if region == "F3" or region == "F2" or region == "B1c": #✓
+		if region == "F3" or region == "F2" or region == "B1c" or region == "LoopB": #✓
 			target = partial_seq.reverse_complement() #Already 3'
 			primer = partial_seq
 			if region == "B1c": #Change to 5'
 				target = target[::-1]
 				primer = primer[::-1]
-		elif region == "F1c" or region == "B2" or region == "B3": #✓
+		elif region == "F1c" or region == "B2" or region == "B3" or region == "LoopF": #✓
 			target = partial_seq
 			primer = partial_seq.reverse_complement() #3' already
 			if region == "F1c": #Change to 5'
 				target = target[::-1]
 				primer = primer[::-1]
+		else:
+			raise Exception(f"{region} region does not exist")
 
 		target = str(target)
 		primer = str(primer)
@@ -36,10 +38,12 @@ def calc_median_end_stability(region,partial_sequences,primer3_params):
 def calc_median_tm(region,partial_sequences,primer3_params):
 	tms = []
 	for partial_seq,number in partial_sequences.items():
-		if region == "F3" or region == "F2" or region == "B1c": #✓
+		if region == "F3" or region == "F2" or region == "B1c" or region == "LoopB": #✓
 			primer = str(partial_seq)
-		elif region == "F1c" or region == "B2" or region == "B3": #✓
+		elif region == "F1c" or region == "B2" or region == "B3" or region == "LoopF": #✓
 			primer = str(partial_seq.reverse_complement()) #Keep everything 5' -> 3'
+		else:
+			raise Exception(f"{region} region does not exist")
 		tm = primer3.bindings.calcTm(primer,**primer3_params)
 		tms.extend([tm for _ in range(number)])
 
@@ -50,10 +54,12 @@ def calc_median_tm(region,partial_sequences,primer3_params):
 def calc_median_gc(region,partial_sequences):
 	gcs = []
 	for partial_seq,number in partial_sequences.items():
-		if region == "F3" or region == "F2" or region == "B1c": #✓
+		if region == "F3" or region == "F2" or region == "B1c" or region == "LoopB": #✓
 			primer = str(partial_seq)
-		elif region == "F1c" or region == "B2" or region == "B3": #✓
+		elif region == "F1c" or region == "B2" or region == "B3" or region == "LoopF": #✓
 			primer = str(partial_seq.reverse_complement())
+		else:
+			raise Exception(f"{region} region does not exist")
 		gc_amt = 0
 		for nuc in primer:
 			if nuc == "G" or nuc == "C":
@@ -66,10 +72,12 @@ def calc_median_gc(region,partial_sequences):
 def calc_hairpin(region,partial_sequences,primer3_params,threshold):
 	hairpins = []
 	for partial_seq,number in partial_sequences.items():
-		if region == "F3" or region == "F2" or region == "B1c":
+		if region == "F3" or region == "F2" or region == "B1c" or region == "LoopB":
 			primer = str(partial_seq)
-		elif region == "F1c" or region == "B2" or region == "B3":
+		elif region == "F1c" or region == "B2" or region == "B3" or region == "LoopF":
 			primer = str(partial_seq.reverse_complement())
+		else:
+			raise Exception(f"{region} region does not exist")
 		struc_found = 1 if primer3.bindings.calcHairpin(primer,**primer3_params).structure_found else 0
 		hairpins.extend([struc_found for _ in range(number)])
 	hairpins = np.array(hairpins)
