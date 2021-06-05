@@ -28,14 +28,15 @@ def score_primers():
 	scored_entropy+=list(scored_primers.entropy.apply(lambda elem : 1-(elem / scored_primers.entropy.max())).to_numpy())
 	#scored_entropy[region] = np.true_divide(scored_entropy[region],np.amax(scored_entropy[region]))
 	scored_entropy_end+=list(scored_primers.entropy_end.apply(lambda elem : 1-(elem / scored_primers.entropy_end.max())).to_numpy())
-	total_score = np.array(scored_tm) + np.array(scored_gc) + np.array(scored_end) #+ np.array(scored_entropy)*1/max(scored_entropy) + np.array(scored_entropy_end) * 1/max(scored_entropy_end)
+	total_score = (np.array(scored_tm) + np.array(scored_gc) + np.array(scored_end) + np.array(scored_entropy) + np.array(scored_entropy_end)) / 5
+	#total_score = np.array(scored_entropy)
 
 	scored_primers["score"] = total_score
 	out = pd.DataFrame(columns=scored_primers.columns)
 	for region in ["F3","F2","F1c","B1c","B2","B3"]:
 		cur_region = scored_primers[scored_primers.region==region]
 		score_min = cur_region["score"].quantile(params["score_quantile"])
-		out.append(cur_region[cur_region["score"] >= score_min])
+		out = out.append(cur_region[cur_region["score"] >= score_min])
 	return out
 
 
@@ -71,7 +72,7 @@ def score_primers():
 	return true_output"""
 
 
-primers = pd.read_csv(snakemake.input[0])
+df = pd.read_csv(snakemake.input[0])
 thermo_params = json.load(open(snakemake.input[1],"r"))
 params = json.load(open(snakemake.input[2],"r"))
 output = score_primers()
