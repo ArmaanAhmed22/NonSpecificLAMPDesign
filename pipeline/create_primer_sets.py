@@ -6,7 +6,7 @@ import json
 params = json.load(open(snakemake.input[1],"r"))
 
 def get_top_unit():
-	return {"set_position":[-1,-1,-1,-1,-1,-1],"set_length":[-1,-1,-1,-1,-1,-1],"score":[-1,-1,-1,-1,-1,-1]}
+	return {"set_position":[-1,-1,-1,-1,-1,-1],"set_length":[-1,-1,-1,-1,-1,-1],"score":[-1,-1,-1,-1,-1,-1],"thermo":{"tm":[-1,-1,-1,-1,-1,-1],"end":[-1,-1,-1,-1,-1,-1],"gc":[-1,-1,-1,-1,-1,-1]}}
 top = [get_top_unit() for _ in range(params["top"])]
 #top = {"set":[-1,-1,-1,-1,-1,-1],"score":[-1,-1,-1,-1,-1,-1]}
 
@@ -91,12 +91,15 @@ for f3_primer,f3_data in tqdm(enumerate(df_F3.itertuples()),total=df_F3.shape[0]
 						if f3_score + f2_score + f1c_score + b1c_score + b2_score < max_before_score["B3"][b3_primer]:
 							continue
 						total_score = f3_score + f2_score + f1c_score + b1c_score + b2_score + b3_data.score
+						
+						max_before_score["F2"][f2_primer] = f3_score
+						max_before_score["F1c"][f1c_primer] = f3_score + f2_score
+						max_before_score["B1c"][b1c_primer] = f3_score + f2_score + f1c_score
+						max_before_score["B2"][b2_primer] = f3_score + f2_score + f1c_score + b1c_score
+						max_before_score["B3"][b3_primer] = f3_score + f2_score + f1c_score + b1c_score + b2_score
+
 						if total_score > sum(top[-1]["score"]):
-							max_before_score["F2"][f2_primer] = f3_score
-							max_before_score["F1c"][f1c_primer] = f3_score + f2_score
-							max_before_score["B1c"][b1c_primer] = f3_score + f2_score + f1c_score
-							max_before_score["B2"][b2_primer] = f3_score + f2_score + f1c_score + b1c_score
-							max_before_score["B3"][b3_primer] = f3_score + f2_score + f1c_score + b1c_score + b2_score
+							
 							cur_index = len(top) - 1
 							while (cur_index > 0 and total_score > sum(top[cur_index]["score"])):
 								cur_index-=1
@@ -122,6 +125,27 @@ for f3_primer,f3_data in tqdm(enumerate(df_F3.itertuples()),total=df_F3.shape[0]
 							top[cur_index]["score"][3] = b1c_score
 							top[cur_index]["score"][4] = b2_score
 							top[cur_index]["score"][5] = b3_data.score
+
+							top[cur_index]["thermo"]["tm"][0] = f3_data.tm
+							top[cur_index]["thermo"]["tm"][1] = f2_data.tm
+							top[cur_index]["thermo"]["tm"][2] = f1c_data.tm
+							top[cur_index]["thermo"]["tm"][3] = b1c_data.tm
+							top[cur_index]["thermo"]["tm"][4] = b2_data.tm
+							top[cur_index]["thermo"]["tm"][5] = b3_data.tm
+
+							top[cur_index]["thermo"]["end"][0] = f3_data.end
+							top[cur_index]["thermo"]["end"][1] = f2_data.end
+							top[cur_index]["thermo"]["end"][2] = f1c_data.end
+							top[cur_index]["thermo"]["end"][3] = b1c_data.end
+							top[cur_index]["thermo"]["end"][4] = b2_data.end
+							top[cur_index]["thermo"]["end"][5] = b3_data.end
+
+							top[cur_index]["thermo"]["gc"][0] = f3_data.gc
+							top[cur_index]["thermo"]["gc"][1] = f2_data.gc
+							top[cur_index]["thermo"]["gc"][2] = f1c_data.gc
+							top[cur_index]["thermo"]["gc"][3] = b1c_data.gc
+							top[cur_index]["thermo"]["gc"][4] = b2_data.gc
+							top[cur_index]["thermo"]["gc"][5] = b3_data.gc
 
 
 #Output primer sets
