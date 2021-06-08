@@ -3,6 +3,8 @@ import os
 import argparse
 import re
 from Bio import SeqIO
+from taskmessenger.send import CompleteMessage,EmailData
+from getpass import getpass
 
 def parse() -> tuple:
 	parser = argparse.ArgumentParser()
@@ -136,17 +138,26 @@ class File:
 		return str(self.__dict__)
 
 
+c = CompleteMessage("aahmed22@scarsdaleschools.org")
+p = getpass()
+c.set_password(p)
+e = EmailData(f"Finished NonSpecificLAMP jobs","DONE")
 
-files,cont = parse()
 
-if cont:
-	files = File.create_next_files(files)
+@c.send_email_after(e)
+def main():
+	files,cont = parse()
 
-while len(files) >= 1:
-	for f in files:
-		print(f)
-	opposites = File.snakemake_construct_opposites(files)
-	File.snakemake_run(files+opposites)
-	files = File.evaluate_and_create_next_files_if_possible(files,opposites)
+	if cont:
+		files = File.create_next_files(files)
+
+	while len(files) >= 1:
+		for f in files:
+			print(f)
+		opposites = File.snakemake_construct_opposites(files)
+		File.snakemake_run(files+opposites)
+		files = File.evaluate_and_create_next_files_if_possible(files,opposites)
+
+main()
 
 
