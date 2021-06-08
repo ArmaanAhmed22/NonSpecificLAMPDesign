@@ -39,6 +39,7 @@ for f3_primer,f3_data in tqdm(enumerate(df_F3.itertuples()),total=df_F3.shape[0]
 		f3_score = f3_data.score
 		if f3_score < max_before_score["F2"][f2_primer]:
 			continue
+		max_before_score["F2"][f2_primer] = f3_score
 
 		for f1c_primer,f1c_data in enumerate(df_F1c.itertuples()):
 			if not get_satisfied_spacing(f1c_data.pos - f2_data.pos,"F2|5',F1c|3'"):
@@ -91,14 +92,14 @@ for f3_primer,f3_data in tqdm(enumerate(df_F3.itertuples()),total=df_F3.shape[0]
 						if f3_score + f2_score + f1c_score + b1c_score + b2_score < max_before_score["B3"][b3_primer]:
 							continue
 						total_score = f3_score + f2_score + f1c_score + b1c_score + b2_score + b3_data.score
-						
-						max_before_score["F2"][f2_primer] = f3_score
-						max_before_score["F1c"][f1c_primer] = f3_score + f2_score
-						max_before_score["B1c"][b1c_primer] = f3_score + f2_score + f1c_score
-						max_before_score["B2"][b2_primer] = f3_score + f2_score + f1c_score + b1c_score
-						max_before_score["B3"][b3_primer] = f3_score + f2_score + f1c_score + b1c_score + b2_score
 
 						if total_score > sum(top[-1]["score"]):
+
+							
+							max_before_score["F1c"][f1c_primer] = f3_score + f2_score
+							max_before_score["B1c"][b1c_primer] = f3_score + f2_score + f1c_score
+							max_before_score["B2"][b2_primer] = f3_score + f2_score + f1c_score + b1c_score
+							max_before_score["B3"][b3_primer] = f3_score + f2_score + f1c_score + b1c_score + b2_score
 							
 							cur_index = len(top) - 1
 							while (cur_index > 0 and total_score > sum(top[cur_index]["score"])):
