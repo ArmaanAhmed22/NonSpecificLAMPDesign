@@ -129,6 +129,11 @@ class File:
 			command = "mkdir ../Input/" + new_file.get_full_name() + "; cp ../Output/"+chosen.get_full_name()+"/untargetable.fasta ../Input/"+new_file.get_full_name()+"/quasispecies.fasta; cp ../Input/" + chosen.get_full_name() + "/reference.fasta ../Input/"+new_file.get_full_name()+"/reference.fasta"
 			assert os.system(command) == 0
 			assert os.system(put_away_unnecessary) == 0
+
+			add_config = "cp ../Input/"+chosen.get_full_name()+"/config.yaml ../Input/"+new_file.get_full_name()+"/config.yaml"
+
+			assert os.system(add_config) == 0
+
 			new_files.append(new_file)
 		return new_files
 

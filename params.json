@@ -34,12 +34,12 @@
 		"LoopF":
 		{
 			"minimum":15,
-			"maximum":30
+			"maximum":22
 		},
 		"LoopB":
 		{
 			"minimum":15,
-			"maximum":30
+			"maximum":22
 		}
 	},
 	"spacing":
