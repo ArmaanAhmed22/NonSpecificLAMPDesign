@@ -1,0 +1,7 @@
+rule init:
+	input:
+		"../.master_scores_config.yaml"
+	output:
+		"../Input/{file}/config.yaml"
+	script:
+		"init.py"

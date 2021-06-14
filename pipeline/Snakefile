@@ -1,3 +1,5 @@
+def get_config(file: str):
+	return "../Input/"+file+"/config.yaml"
 
 rule calc_prevalence:
 	input:
@@ -38,6 +40,8 @@ rule score_primers:
 		"../Output/{file}/primers_scored.csv"
 	conda:
 		"../env.yaml"
+	params:
+		get_config("{file}")
 	script:
 		"score_primers.py"
 
@@ -131,8 +135,11 @@ rule reverse_sequences:
 		"../Input/{file}/quasispecies.fasta"
 	output:
 		"../Input/{file}_rev/reference.fasta",
-		"../Input/{file}_rev/quasispecies.fasta"
+		"../Input/{file}_rev/quasispecies.fasta",
+		"../Input/{file}_rev/config.yaml"
 	conda:
 		"../env.yaml"
+	params:
+		get_config("{file}")
 	script:
 		"reverse_sequences.py"

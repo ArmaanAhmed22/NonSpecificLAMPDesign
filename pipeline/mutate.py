@@ -42,28 +42,28 @@ def get_ambiguous(A,G,C,T,cutoff=0.1):
 
 
 calc_base_pair_shannon(nuc_prevalence)
-degenerate_primer_sets_proto = [{f"{primer_num}_{item}":None for item in ["sequence","position"] for primer_num in range(6)} for _ in range(len(primer_sets))]
+degenerate_primer_sets_proto = [{f"{primer_region}_{item}":None for item in ["sequence","position"] for primer_region in ["F3","F2","F1c","B1c","B2","B3","LoopF","LoopB"]} for _ in range(len(primer_sets))]
 
 for primer_set_number,primer_set in enumerate(primer_sets.values()):
-	for primer_num in range(6):
+	for primer_region in ["F3","F2","F1c","B1c","B2","B3","LoopF","LoopB"]:
 		least_conserved = [{"index":-1,"shannon":-1} for _ in range(num_degenerates)]
 		most_conserved_index,most_conserved = (-1,{"index":-1,"shannon":-1})
 		sequence = ""
-		for npos in range(primer_set["set_position"][primer_num],primer_set["set_position"][primer_num]+primer_set["set_length"][primer_num]):
+		for npos in range(primer_set["set_position"][primer_region],primer_set["set_position"][primer_region]+primer_set["set_length"][primer_region]):
 			##Get least conserved reginos for degenerate insertions
 			if nuc_prevalence.iloc[npos]["shannon"] > most_conserved["shannon"]:
 				least_conserved[most_conserved_index]["index"] = npos
 				least_conserved[most_conserved_index]["shannon"] = nuc_prevalence.iloc[npos]["shannon"]
 
 				most_conserved_index,most_conserved = min(enumerate(least_conserved),key=lambda x: x[1]["shannon"])
-		for npos in range(primer_set["set_position"][primer_num],primer_set["set_position"][primer_num]+primer_set["set_length"][primer_num]):
+		for npos in range(primer_set["set_position"][primer_region],primer_set["set_position"][primer_region]+primer_set["set_length"][primer_region]):
 			if npos in [nuc["index"] for nuc in least_conserved]:
 				amb = get_ambiguous(nuc_prevalence.iloc[npos]["A"],nuc_prevalence.iloc[npos]["G"],nuc_prevalence.iloc[npos]["C"],nuc_prevalence.iloc[npos]["T"])
 				sequence+=amb
 			else:
 				max_nuc,prevalence = max([(nuc,nuc_prevalence.iloc[npos][nuc]) for nuc in ["A","G","C","T"]],key=lambda x:x[1])
 				sequence+=max_nuc
-		degenerate_primer_sets_proto[primer_set_number][f"{primer_num}_sequence"] = sequence
-		degenerate_primer_sets_proto[primer_set_number][f"{primer_num}_position"] = primer_set["set_position"][primer_num]
+		degenerate_primer_sets_proto[primer_set_number][f"{primer_region}_sequence"] = sequence
+		degenerate_primer_sets_proto[primer_set_number][f"{primer_region}_position"] = primer_set["set_position"][primer_region]
 
 pd.DataFrame(degenerate_primer_sets_proto).to_csv(snakemake.output[0],index=False)

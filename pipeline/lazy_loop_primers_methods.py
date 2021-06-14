@@ -8,7 +8,6 @@ import primer3
 from collections import Counter
 import math
 thermo_imp = __import__("thermo")
-lazy_imp = __import__("lazy_loop_primers_methods")
 
 
 
@@ -111,76 +110,3 @@ def get_ambiguous(A,G,C,T,cutoff=0.1):
 			continue
 		return amb
 	return None
-
-def main() -> None:
-	FLoop_start = primers.iloc[0]["1_position"] + len(primers.iloc[0]["1_sequence"])
-	FLoop_end = primers.iloc[0]["2_position"]
-	BLoop_start = primers.iloc[0]["3_position"] + len(primers.iloc[0]["3_sequence"])
-	BLoop_end = primers.iloc[0]["4_position"]
-
-	data = []
-	data.extend(score_region("LoopF",FLoop_start,FLoop_end))
-	data.extend(score_region("LoopB",BLoop_start,BLoop_end))
-
-	df = pd.DataFrame(data)
-	
-	cur_scored_primers = df.copy()[df.hairpin == False]
-	scored_tm = []
-	scored_gc = []
-	scored_end = []
-	scored_entropy = []
-	scored_entropy_end = []
-	for region in ["LoopF","LoopB"]:
-		scored_tm+=list(cur_scored_primers[cur_scored_primers.region == region].tm.apply(lambda elem : score_with_ideal_min_max(thermo_params["TM"][region]["minimum"],thermo_params["TM"][region]["maximum"],thermo_params["TM"][region]["ideal"],elem,2.3333)).to_numpy()) #weight results in -0.7 score for 1 degree off from minimum or maximum
-		scored_gc+=list(cur_scored_primers[cur_scored_primers.region == region].gc.apply(lambda elem : score_with_ideal_min_max(thermo_params["GC"][region]["minimum"],thermo_params["GC"][region]["maximum"],thermo_params["GC"][region]["ideal"],elem,23.333)).to_numpy()) #weight results in -0.7 score for 10% off from minimum or maximum
-	scored_end+=list(cur_scored_primers.end.apply(lambda elem: 1 if elem <= thermo_params["END_STABILITY"]["maximum"] else 0).to_numpy())
-	scored_entropy+=list(cur_scored_primers.entropy.apply(lambda elem : 1-(elem / cur_scored_primers.entropy.max())).to_numpy())
-	#scored_entropy[region] = np.true_divide(scored_entropy[region],np.amax(scored_entropy[region]))
-	scored_entropy_end+=list(cur_scored_primers.entropy_end.apply(lambda elem : 1-(elem / cur_scored_primers.entropy_end.max())).to_numpy())
-	total_score = np.array(scored_tm) + np.array(scored_gc) + np.array(scored_end) #+ np.array(scored_entropy)*1/max(scored_entropy) + np.array(scored_entropy_end) * 1/max(scored_entropy_end)
-
-	cur_scored_primers["score"] = total_score
-	print(cur_scored_primers.sort_values(by="score",ascending=False).head())
-
-	best_row_f = cur_scored_primers[cur_scored_primers.region == "LoopF"].sort_values(by="score",ascending=False).iloc[0]
-	best_row_b = cur_scored_primers[cur_scored_primers.region == "LoopB"].sort_values(by="score",ascending=False).iloc[0]
-	out_df = pd.DataFrame()
-	for loop,row in (("LoopF",best_row_f),("LoopB",best_row_b)):
-		seq = ""
-		for offset in range(row["length"]):
-			count = {}
-			for l in get_partial_sequences(row["pos"]+offset,1).most_common():
-				count[str(l[0])] = l[1]
-			seq+=get_ambiguous(count.get("A",0),count.get("G",0),count.get("C",0),count.get("T",0))
-		if loop == "LoopF":
-			row["Seq"] = str(Seq(seq).reverse_complement())
-		elif loop == "LoopB":
-			row["Seq"] = str(Seq(seq))
-		else:
-			raise Exception("NO")
-		out_df = out_df.append(row)
-	out_df.head().to_csv(snakemake.output[0],index=False)
-	
-
-
-
-
-	
-
-primers = pd.read_csv(snakemake.input[0])
-
-open_fasta = lambda file: list(SeqIO.parse(open(file),"fasta"))
-
-ref = open_fasta(snakemake.input[1])
-quasispecies = open_fasta(snakemake.input[2])
-nt_prev = pd.read_csv(snakemake.input[3])
-params = json.load(open(snakemake.input[4]))
-assay_params = json.load(open(snakemake.input[5]))
-thermo_params = json.load(open(snakemake.input[6]))
-ambiguous_to_nt = json.load(open(snakemake.input[7]))
-
-calc_base_pair_shannon(nt_prev)
-
-main()
-
-

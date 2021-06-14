@@ -16,15 +16,6 @@ thermo_params = json.load(open(snakemake.input[5],"r"))
 
 targets = [0 for _ in range(df_primers.shape[0])]
 
-num_to_region = {
-	0:"F3",
-	1:"F2",
-	2:"F1c",
-	3:"B1c",
-	4:"B2",
-	5:"B3"
-}
-
 def inEnd(nuc_pos,end_len,rest_len,region_name):
 	if region_name == "F3" or region_name == "F2":
 		return not (nuc_pos < rest_len)
@@ -34,14 +25,18 @@ def inEnd(nuc_pos,end_len,rest_len,region_name):
 		return not (nuc_pos < rest_len)
 	elif region_name == "B2" or region_name == "B3":
 		return (nuc_pos < end_len)
+	elif region_name == "LoopF":
+		return nuc_pos < end_len
+	elif region_name == "LoopB":
+		return not (nuc_pos < rest_len)
 	else:
 		raise Exception("Not legal!!")
 
 def target_sequence(sequence,primers):
 
-	for primer_num,primer in enumerate(primers):
+	for primer_region,primer in primers.items():
 		mismatch = 0
-		region_name = num_to_region[primer_num]
+		region_name = primer_region
 		end_region_len = params["length"][region_name]["minimum"] // 3
 		rest_len = len(primer["sequence"]) - end_region_len
 		for nuc_relative_pos,nuc in enumerate(primer["sequence"]):
@@ -110,7 +105,7 @@ for record in tqdm(SeqIO.parse(open(snakemake.input[1],"r"),"fasta")):
 	total+=1
 	targeted = False
 	for i,row in df_primers.iterrows():
-		primer_data = [{"sequence" : row[f"{i}_sequence"], "position" : row[f"{i}_position"]} for i in range(6)]
+		primer_data = [{primer_region:{"sequence" : row[f"{primer_region}_sequence"], "position" : row[f"{primer_region}_position"]}} for primer_region in ["F3","F2","F1c","B1c","B2","B3","LoopF","LoopB"]]
 		if target_sequence(sequence,primer_data):
 			targets[i]+=1
 			targeted = True

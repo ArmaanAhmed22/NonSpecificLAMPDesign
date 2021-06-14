@@ -79,6 +79,14 @@ def individual_primer_generate(reference,primer_lengths,primer_spacing,nuc_preva
 				elif region == "B2" or region == "B3":
 					entropy_end = nuc_prevalence["shannon"][region_pos:region_pos+primer_end].sum()
 					entropy = nuc_prevalence["shannon"][region_pos+primer_end:region_pos+region_len].sum()
+				elif region == "LoopF":
+					entropy_end = nuc_prevalence["shannon"][region_pos:region_pos+primer_end].sum()
+					entropy = nuc_prevalence["shannon"][region_pos+primer_end:region_pos+region_len].sum()
+				elif region == "LoopB":
+					entropy = nuc_prevalence["shannon"][region_pos:region_pos+primer_rest].sum()
+					entropy_end = nuc_prevalence["shannon"][region_pos+primer_rest:region_pos+region_len].sum()
+				else:
+					raise Exception(f"No region named \"{region}\"")
 				#Calc Tm
 				tm = thermo_imp.calc_median_tm(region,partial_sequences,primer3_params_tm)
 				#Calc End stability
@@ -138,6 +146,24 @@ def individual_primer_generate(reference,primer_lengths,primer_spacing,nuc_preva
 		primer_lengths["F3"]["minimum"] + primer_spacing["F3|3',F2|5'"]["minimum"] + primer_spacing["F2|5',B2|5'"]["minimum"] + primer_spacing["B2|5',B3|3'"]["minimum"],
 		0
 		)
+	)
+
+	# Generate LoopF
+	data_hold.extend(
+	generate_region("LoopF",
+		primer_lengths["F3"]["minimum"] + primer_spacing["F3|3',F2|5'"]["minimum"] + primer_lengths["F2"]["minimum"],
+		-primer_lengths["F2"]["maximum"] + primer_lengths["F2|5',B2|5'"] + primer_spacing["B2|5',B3|3'"]["minimum"] + primer_lengths["B3"]["minimum"]
+		depend_on_length=False
+		)
+	)
+
+	data_hold.extend(
+	generate_region("LoopB",
+		primer_lengths["F3"]["minimum"] + primer_spacing["F3|3',F2|5'"]["minimum"] + primer_spacing["F2|5',B2|5'"]["minimum"] - primer_spacing["B1c|3',B2|5'"]["maximum"],
+		primer_spacing["B1c|3',B2|5'"]["minimum"] + primer_spacing["B2|5',B3|3'"]["minimum"] + primer_lengths["B3"]["minimum"],
+		depend_on_length=False
+		)
+
 	)
 	
 	result = pd.DataFrame(data_hold)
