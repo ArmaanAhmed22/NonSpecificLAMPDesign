@@ -1,0 +1,61 @@
+score_mean: "arithmetic"
+set_mean: "arithmetic"
+use_loop: False
+weights_score:
+  B1c:
+    end: 1
+    entropy: 1
+    entropy_end: 1
+    gc: 1
+    tm: 1
+  B2:
+    end: 1
+    entropy: 1
+    entropy_end: 1
+    gc: 1
+    tm: 1
+  B3:
+    end: 1
+    entropy: 1
+    entropy_end: 1
+    gc: 1
+    tm: 1
+  F1c:
+    end: 1
+    entropy: 1
+    entropy_end: 1
+    gc: 1
+    tm: 1
+  F2:
+    end: 1
+    entropy: 1
+    entropy_end: 1
+    gc: 1
+    tm: 1
+  F3:
+    end: 1
+    entropy: 1
+    entropy_end: 1
+    gc: 1
+    tm: 1
+  LoopB:
+    end: 1
+    entropy: 1
+    entropy_end: 1
+    gc: 1
+    tm: 1
+  LoopF:
+    end: 1
+    entropy: 1
+    entropy_end: 1
+    gc: 1
+    tm: 1
+weights_set:
+  B1c: 1
+  B2: 1
+  B3: 1
+  F1c: 1
+  F2: 1
+  F3: 1
+  LoopB: 1
+  LoopF: 1
