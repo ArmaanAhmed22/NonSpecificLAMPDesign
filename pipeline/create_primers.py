@@ -152,7 +152,7 @@ def individual_primer_generate(reference,primer_lengths,primer_spacing,nuc_preva
 	data_hold.extend(
 	generate_region("LoopF",
 		primer_lengths["F3"]["minimum"] + primer_spacing["F3|3',F2|5'"]["minimum"] + primer_lengths["F2"]["minimum"],
-		-primer_lengths["F2"]["maximum"] + primer_lengths["F2|5',B2|5'"] + primer_spacing["B2|5',B3|3'"]["minimum"] + primer_lengths["B3"]["minimum"]
+		-primer_lengths["F2"]["maximum"] + primer_spacing["F2|5',B2|5'"]["minimum"] + primer_spacing["B2|5',B3|3'"]["minimum"] + primer_lengths["B3"]["minimum"],
 		depend_on_length=False
 		)
 	)

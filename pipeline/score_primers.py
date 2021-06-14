@@ -35,7 +35,7 @@ def score_primers():
 	total_score = returned_total_score(scored_primers["region"].to_numpy(),{k:np.array(v) for k,v in scores.items()})
 	scored_primers["score"] = total_score
 	out = pd.DataFrame(columns=scored_primers.columns)
-	for region in ["F3","F2","F1c","B1c","B2","B3"]:
+	for region in ["F3","F2","F1c","B1c","B2","B3","LoopF","LoopB"]:
 		cur_region = scored_primers[scored_primers.region==region]
 		score_min = cur_region["score"].quantile(params["score_quantile"])
 		out = out.append(cur_region[cur_region["score"] >= score_min])

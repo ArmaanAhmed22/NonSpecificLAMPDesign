@@ -37,7 +37,7 @@ for f3_primer,f3_data in tqdm(enumerate(separated_dfs["F3"].itertuples()),total=
 
 		if f3_data.score < max_before_score["F2"][f2_primer]:
 			continue
-		max_before_score["F2"][f2_primer] = f3_score
+		max_before_score["F2"][f2_primer] = f3_data.score
 
 		for f1c_primer,f1c_data in enumerate(separated_dfs["F1c"].itertuples()):
 			if not get_satisfied_spacing(f1c_data.pos - f2_data.pos,"F2|5',F1c|3'"):
@@ -87,7 +87,7 @@ for f3_primer,f3_data in tqdm(enumerate(separated_dfs["F3"].itertuples()),total=
 								continue
 							if f3_data.score + f2_data.score + f1c_data.score + b1c_data.score + b2_data.score + b3_data.score < max_before_score["LoopF"][loopF_primer]:
 								continue
-							max_before_score["LoopF"][loopF_primer] = f3_data.score + f2_data.score + f1c_data.score + b1c_data.score + b2_data.score + b3_data.
+							max_before_score["LoopF"][loopF_primer] = f3_data.score + f2_data.score + f1c_data.score + b1c_data.score + b2_data.score + b3_data.score
 							for loopB_primer,loopB_data in enumerate(separated_dfs["LoopB"].itertuples()):
 								if not (loopB_data.pos >= b1c_data.pos + b1c_data.length and loopB_data.pos + loopB_data.length <= b2_data.pos):
 									continue
