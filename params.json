@@ -87,5 +87,5 @@
 	},
 	"top":1,
 	"degenerates":2,
-	"score_quantile":0.80
+	"score_quantile":0.4
 }
