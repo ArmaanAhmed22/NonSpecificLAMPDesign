@@ -6,7 +6,7 @@ import json
 params = json.load(open(snakemake.input[1],"r"))
 
 def get_top_unit():
-	get_dict = lambda: {k : [-1,-1,-1,-1,-1,-1,-1,-1] for k in ["F3","F2","F1c","B1c","B2","B3","LoopF","LoopB"]}
+	get_dict = lambda: {k : -1 for k in ["F3","F2","F1c","B1c","B2","B3","LoopF","LoopB"]}
 	return {"set_position":get_dict(),"set_length":get_dict(),"score":get_dict(),"thermo":{"tm":get_dict(),"end":get_dict(),"gc":get_dict()}}
 top = [get_top_unit() for _ in range(params["top"])]
 #top = {"set":[-1,-1,-1,-1,-1,-1],"score":[-1,-1,-1,-1,-1,-1]}
@@ -96,7 +96,6 @@ for f3_primer,f3_data in tqdm(enumerate(separated_dfs["F3"].itertuples()),total=
 								max_before_score["LoopB"][loopB_primer] = f3_data.score + f2_data.score + f1c_data.score + b1c_data.score + b2_data.score + b3_data.score + loopF_data.score
 
 								total_score = f3_data.score + f2_data.score + f1c_data.score + b1c_data.score + b2_data.score + b3_data.score + loopF_data.score + loopB_data.score
-
 								if total_score > sum(top[-1]["score"].values()):
 							
 									cur_index = len(top) - 1
@@ -124,9 +123,9 @@ for f3_primer,f3_data in tqdm(enumerate(separated_dfs["F3"].itertuples()),total=
 
 									top[cur_index]["score"]["F3"] = f3_data.score
 									top[cur_index]["score"]["F2"] = f2_data.score
-									top[cur_index]["score"]["F1c"] = f1c_score
-									top[cur_index]["score"]["B1c"] = b1c_score
-									top[cur_index]["score"]["B2"] = b2_score
+									top[cur_index]["score"]["F1c"] = f1c_data.score
+									top[cur_index]["score"]["B1c"] = b1c_data.score
+									top[cur_index]["score"]["B2"] = b2_data.score
 									top[cur_index]["score"]["B3"] = b3_data.score
 									top[cur_index]["score"]["LoopF"] = loopF_data.score
 									top[cur_index]["score"]["LoopB"] = loopB_data.score
