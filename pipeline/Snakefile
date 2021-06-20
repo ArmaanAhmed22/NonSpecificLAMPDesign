@@ -37,7 +37,8 @@ rule score_primers:
 		"../params_thermo.json",
 		"../params.json"
 	output:
-		"../Output/{file}/primers_scored.csv"
+		"../Output/{file}/primers_scored.csv",
+		"../Output/{file}/primers_scored_figs.png"
 	conda:
 		"../env.yaml"
 	params:
