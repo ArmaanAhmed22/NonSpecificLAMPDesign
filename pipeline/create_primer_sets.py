@@ -30,7 +30,7 @@ def get_satisfied_spacing(spacing,region):
 	return not (spacing > params["spacing"][region]["maximum"] or spacing < params["spacing"][region]["minimum"])
 
 for f3_primer,f3_data in tqdm(enumerate(separated_dfs["F3"].itertuples()),total=separated_dfs["F3"].shape[0],desc="F3"):
-	iterate_f2 = tqdm(enumerate(separated_dfs["F2"].itertuples()),total=separated_dfs["F2"].shape[0],desc="F2") if f3_primer == 0 else enumerate(separated_dfs["F2"].itertuples())
+	iterate_f2 = tqdm(enumerate(separated_dfs["F2"].itertuples()),total=separated_dfs["F2"].shape[0],desc="\tF2") if not (f3_primer == -1) else enumerate(separated_dfs["F2"].itertuples())
 	for f2_primer,f2_data in iterate_f2:
 		if not get_satisfied_spacing(f2_data.pos - (f3_data.pos + f3_data.length),"F3|3',F2|5'"):
 			continue
@@ -39,7 +39,7 @@ for f3_primer,f3_data in tqdm(enumerate(separated_dfs["F3"].itertuples()),total=
 			continue
 		max_before_score["F2"][f2_primer] = f3_data.score
 
-		for f1c_primer,f1c_data in enumerate(separated_dfs["F1c"].itertuples()):
+		for f1c_primer,f1c_data in tqdm(enumerate(separated_dfs["F1c"].itertuples()),total=separated_dfs["F3"].shape[0],desc="\t\tF1c"):
 			if not get_satisfied_spacing(f1c_data.pos - f2_data.pos,"F2|5',F1c|3'"):
 				continue
 			
